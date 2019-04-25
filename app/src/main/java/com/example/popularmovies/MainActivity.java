@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.List;
@@ -21,104 +22,137 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
 
-    //private int[] posters = {R.drawable.gun_for_hire_poster, R.drawable.gun_for_hire_poster, R.drawable.gun_for_hire_poster, R.drawable.gun_for_hire_poster, R.drawable.gun_for_hire_poster, R.drawable.gun_for_hire_poster};
-
-    //private static final int NUM_LIST_ITEMS = 100;
-
-    private FilmAdapter fAdapter;
-    private RecyclerView fFilmsList;
+    private FilmAdapter adapter;
+    private RecyclerView filmsList;
     private ProgressBar progressBar;
-    private TextView responseView;
-    //static final String API_KEY = "dc31184cbd225288f0a80af2ed71c703";
+    private Switch sortSwitch;
+    private TextView sortTitle;
+
 
     static final String API_KEY = BuildConfig.ApiKey;
     static final String BASE_URL = "https://api.themoviedb.org/3/";
-
-
-    // Most popular movies
-    ///discover/movie? sort_by=popularity.desc
-    // Highest rated Movies
-    ///discover/movie? sort_by=vote_average.desc
-    //or
-    ///discover/movie/?sort_by=vote_average.desc
-
-    //request url base is
-    //https://api.themoviedb.org/3/movie/76341?api_key={api_key}
-
-    // button for sorting one does an async for popular "Most Popular" sort_by=popularity.desc and the other by "user rating" sort_by=vote_average.desc
-
+    static final String Popular = "Popular Movies";
+    static final String HighRated = "Highest User Rating";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         progressBar = findViewById(R.id.progressBar);
+        filmsList = findViewById(R.id.rv_films);
+        sortSwitch = findViewById(R.id.sort_switch);
+        sortTitle = findViewById(R.id.popular_movies);
 
-        responseView = findViewById(R.id.responseViewText);
 
-        fFilmsList =  findViewById(R.id.rv_films);
-//
-//        fFilmsList.setLayoutManager(new GridLayoutManager(this, 4));
-//
-//        fFilmsList.setHasFixedSize(true);
+        adapter = new FilmAdapter(MainActivity.this, listener);
+        filmsList.setAdapter(adapter);
+        filmsList.setLayoutManager(new GridLayoutManager(MainActivity.this, 4));
+        filmsList.setHasFixedSize(true);
 
-        //{{BASE_URL}}/discover/movie?api_key={{API_KEY}}&sort_by=popularity.desc&page=1
 
+        //Onclick listener for sorting between popular and highest rating movies
+        sortSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                MovieDBClient service = retrofit.create(MovieDBClient.class);
+                progressBar.setVisibility(View.VISIBLE);
+                if (on) {
+                    sortTitle.setText(HighRated);
+
+                    Call<FilmResults> highRatingFilmsCall = service.listFilms("top_rated", API_KEY);
+                    // async call uses enqueue method in Retrofit.
+                    highRatingFilmsCall.enqueue(new Callback<FilmResults>() {
+                        @Override
+                        public void onResponse(Call<FilmResults> call, Response<FilmResults> response) {
+                            //show results on screen.
+                            List<Film> films = fetchResults(response);
+                            adapter.setMovies(films);
+                        }
+
+                        @Override
+                        public void onFailure(Call<FilmResults> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+
+
+                } else {
+
+                    sortTitle.setText(Popular);
+                    Call<FilmResults> popFilmsCall = service.listFilms("popular", API_KEY);
+
+                    // async call uses enqueue method in Retrofit.
+                    popFilmsCall.enqueue(new Callback<FilmResults>() {
+                        @Override
+                        public void onResponse(Call<FilmResults> call, Response<FilmResults> response) {
+                            //show results on screen.
+                            List<Film> films = fetchResults(response);
+                            adapter.setMovies(films);
+                        }
+
+                        @Override
+                        public void onFailure(Call<FilmResults> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/3/")
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         MovieDBClient service = retrofit.create(MovieDBClient.class);
+        progressBar.setVisibility(View.VISIBLE);
 
-        Call<List<Film>> popFilmsCall = service.listFilms("dc31184cbd225288f0a80af2ed71c703","popularity.desc","1");
-        Log.v("MainActivity", "This is the call being made: " + popFilmsCall );
+        Call<FilmResults> popFilmsCall = service.listFilms("popular", API_KEY);
+
 
         // async call uses enqueue method in Retrofit.
-        popFilmsCall.enqueue(new Callback<List<Film>>() {
+        popFilmsCall.enqueue(new Callback<FilmResults>() {
             @Override
-            public void onResponse(Call<List<Film>> call, Response<List<Film>> response) {
+            public void onResponse(Call<FilmResults> call, Response<FilmResults> response) {
                 //show results on screen.
-                Log.v("MainActivity", "Response" + response.toString());
-                Log.v("MainActivity", "Here is getting hit!" );
-                progressBar.setVisibility(View.VISIBLE);
-                List<Film> films = response.body();
+                List<Film> films = fetchResults(response);
+                adapter.setMovies(films);
 
-
-                //Films is null
-                Log.v("MainActivity", "Films: " + films);
-                Log.v("MainActivity", "LOGS" + films.size());
-
-
-
-                fAdapter = new FilmAdapter(MainActivity.this);
-
-                fFilmsList.setLayoutManager(new GridLayoutManager(MainActivity.this, 4));
-
-                fFilmsList.setHasFixedSize(true);
-
-                fFilmsList.setAdapter(fAdapter);
 
             }
 
-
             @Override
-            public void onFailure(Call<List<Film>> call, Throwable t) {
-                //show error on screen
-                responseView.setText("Sorry an Error Occured");
-
+            public void onFailure(Call<FilmResults> call, Throwable t) {
+                t.printStackTrace();
             }
         });
+        progressBar.setVisibility(View.GONE);
     }
 
+    private List<Film> fetchResults(Response<FilmResults> response) {
+        FilmResults topRatedFilms = response.body();
+        return topRatedFilms.getResults();
+    }
 
     FilmAdapter.Listener listener = new FilmAdapter.Listener() {
         @Override
         void onClick(Film movie) {
             Intent filmDetail = new Intent(MainActivity.this, FilmDetailActivity.class);
-            filmDetail.putExtra("filmTitle", movie.getTitle());
+            filmDetail.putExtra("title", movie.getTitle());
+            filmDetail.putExtra("rating", movie.getVoteAverage().toString());
+            filmDetail.putExtra("synopsis", movie.getOverview());
+            filmDetail.putExtra("releaseDate", movie.getReleaseDate());
+            filmDetail.putExtra("posterPath", movie.getPosterPath());
+            filmDetail.putExtra("id", movie.getId().toString());
             MainActivity.this.startActivity(filmDetail);
         }
     };

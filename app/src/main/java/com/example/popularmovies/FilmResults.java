@@ -5,9 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by kdillon on 2019-02-13.
- */
 
 public class FilmResults {
     @SerializedName("page")
