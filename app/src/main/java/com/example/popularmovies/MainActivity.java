@@ -11,11 +11,10 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-<<<<<<< HEAD
+
 import com.example.popularmovies.Data.AppDatabase;
 
-=======
->>>>>>> c066aa77a1a2ae2939c33b044b65a00805c6efd9
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,10 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Switch sortSwitch;
     private TextView sortTitle;
-<<<<<<< HEAD
+
     private AppDatabase appDb;
-=======
->>>>>>> c066aa77a1a2ae2939c33b044b65a00805c6efd9
 
 
     static final String API_KEY = BuildConfig.ApiKey;
@@ -55,13 +52,9 @@ public class MainActivity extends AppCompatActivity {
         sortTitle = findViewById(R.id.popular_movies);
 
 
-<<<<<<< HEAD
-
         appDb = AppDatabase.getDatabase(getApplicationContext());
 
 
-=======
->>>>>>> c066aa77a1a2ae2939c33b044b65a00805c6efd9
         adapter = new FilmAdapter(MainActivity.this, listener);
         filmsList.setAdapter(adapter);
         filmsList.setLayoutManager(new GridLayoutManager(MainActivity.this, 4));

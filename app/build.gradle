@@ -12,15 +12,12 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField 'String', "ApiKey", moviedb_api_key
         resValue 'string', "api_key", moviedb_api_key
-<<<<<<< HEAD
 
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
-=======
->>>>>>> c066aa77a1a2ae2939c33b044b65a00805c6efd9
     }
     buildTypes {
         release {
