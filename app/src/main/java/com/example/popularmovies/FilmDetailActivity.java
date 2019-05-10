@@ -35,6 +35,10 @@ public class FilmDetailActivity extends AppCompatActivity {
         String synopsis = getIntent().getStringExtra("synopsis");
         String releaseDate = getIntent().getStringExtra("releaseDate");
         String poster = getIntent().getStringExtra("posterPath");
+<<<<<<< HEAD
+=======
+        String movieId = getIntent().getStringExtra("movieId");
+>>>>>>> c066aa77a1a2ae2939c33b044b65a00805c6efd9
 
         filmReleaseDate = findViewById(R.id.movie_release);
         filmTitle = findViewById(R.id.movie_title);
