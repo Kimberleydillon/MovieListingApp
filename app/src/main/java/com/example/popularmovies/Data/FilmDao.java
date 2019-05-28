@@ -23,4 +23,9 @@ public interface FilmDao {
 
     @Delete
     void delete(Film film);
+
+    @Query("SELECT * FROM films WHERE favourite = 1")
+    List<Film> getAllFavouriteFilms();
+
+
 }

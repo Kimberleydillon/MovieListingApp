@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 
@@ -29,11 +30,9 @@ public class MainActivity extends AppCompatActivity {
     private FilmAdapter adapter;
     private RecyclerView filmsList;
     private ProgressBar progressBar;
-    private Switch sortSwitch;
-    private TextView sortTitle;
+    private TextView testdb;
 
     private AppDatabase appDb;
-
 
     static final String API_KEY = BuildConfig.ApiKey;
     static final String BASE_URL = "https://api.themoviedb.org/3/";
@@ -48,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         filmsList = findViewById(R.id.rv_films);
-        sortSwitch = findViewById(R.id.sort_switch);
-        sortTitle = findViewById(R.id.popular_movies);
+        testdb = findViewById(R.id.testDatabase);
 
 
         appDb = AppDatabase.getDatabase(getApplicationContext());
@@ -60,83 +58,51 @@ public class MainActivity extends AppCompatActivity {
         filmsList.setLayoutManager(new GridLayoutManager(MainActivity.this, 4));
         filmsList.setHasFixedSize(true);
 
+    }
 
-        //Onclick listener for sorting between popular and highest rating movies
-        sortSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                MovieDBClient service = retrofit.create(MovieDBClient.class);
-                progressBar.setVisibility(View.VISIBLE);
-                if (on) {
-                    sortTitle.setText(HighRated);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.popular_ranking:
+                popularFilmCall("popular");
+                return true;
+            case R.id.highest_user_ranking:
+                popularFilmCall("top-rated");
+            case R.id.favourites:
+                String numberOfFavourites = Integer.toString(appDb.filmDao().countFilms());
+                testdb.setText(numberOfFavourites);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-                    Call<FilmResults> highRatingFilmsCall = service.listFilms("top_rated", API_KEY);
-                    // async call uses enqueue method in Retrofit.
-                    highRatingFilmsCall.enqueue(new Callback<FilmResults>() {
-                        @Override
-                        public void onResponse(Call<FilmResults> call, Response<FilmResults> response) {
-                            //show results on screen.
-                            List<Film> films = fetchResults(response);
-                            adapter.setMovies(films);
-                        }
+    private List<Film> fetchResults(Response<FilmResults> response) {
+        FilmResults topRatedFilms = response.body();
+        return topRatedFilms.getResults();
+    }
 
-                        @Override
-                        public void onFailure(Call<FilmResults> call, Throwable t) {
-                            t.printStackTrace();
-                        }
-                    });
-
-
-                } else {
-
-                    sortTitle.setText(Popular);
-                    Call<FilmResults> popFilmsCall = service.listFilms("popular", API_KEY);
-
-                    // async call uses enqueue method in Retrofit.
-                    popFilmsCall.enqueue(new Callback<FilmResults>() {
-                        @Override
-                        public void onResponse(Call<FilmResults> call, Response<FilmResults> response) {
-                            //show results on screen.
-                            List<Film> films = fetchResults(response);
-                            adapter.setMovies(films);
-                        }
-
-                        @Override
-                        public void onFailure(Call<FilmResults> call, Throwable t) {
-                            t.printStackTrace();
-                        }
-                    });
-
-                }
-                progressBar.setVisibility(View.GONE);
-            }
-        });
-
+    private void popularFilmCall(String sort) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         MovieDBClient service = retrofit.create(MovieDBClient.class);
         progressBar.setVisibility(View.VISIBLE);
-
-        Call<FilmResults> popFilmsCall = service.listFilms("popular", API_KEY);
-
-
+        Call<FilmResults> highRatingFilmsCall = service.listFilms(sort, API_KEY);
         // async call uses enqueue method in Retrofit.
-        popFilmsCall.enqueue(new Callback<FilmResults>() {
+        highRatingFilmsCall.enqueue(new Callback<FilmResults>() {
             @Override
             public void onResponse(Call<FilmResults> call, Response<FilmResults> response) {
                 //show results on screen.
                 List<Film> films = fetchResults(response);
                 adapter.setMovies(films);
-
-
             }
 
             @Override
@@ -145,11 +111,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         progressBar.setVisibility(View.GONE);
-    }
-
-    private List<Film> fetchResults(Response<FilmResults> response) {
-        FilmResults topRatedFilms = response.body();
-        return topRatedFilms.getResults();
     }
 
     FilmAdapter.Listener listener = new FilmAdapter.Listener() {

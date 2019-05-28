@@ -6,4 +6,7 @@
     <string name="rating">Rating</string>
     <string name="overview">Overview</string>
     <string name="reviews">Reviews</string>
+    <string name="title_activity_film_favourites">FilmFavouritesActivity</string>
+    <string name="user_ranking">Highest User Rating</string>
+    <string name="favourite">Favourite Movies</string>
 </resources>

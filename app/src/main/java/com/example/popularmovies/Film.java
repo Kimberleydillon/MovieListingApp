@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 
-public class Film {
+public class Film extends com.example.popularmovies.Data.Film {
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
@@ -49,6 +49,17 @@ public class Film {
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+    @SerializedName("favourite")
+    @Expose
+    private Boolean favourite;
+
+    public Boolean getFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(Boolean favourite) {
+        this.favourite = favourite;
+    }
 
     public Integer getVoteCount() {
         return voteCount;
