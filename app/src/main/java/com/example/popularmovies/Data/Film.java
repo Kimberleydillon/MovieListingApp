@@ -16,52 +16,44 @@ public class Film {
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
-    @SerializedName("id")
-    @Expose
-    private Integer id;
+
+//    @SerializedName("id")
+//    @Expose
+//    private Integer id;
+
     @SerializedName("video")
     @Expose
     private Boolean video;
-    @SerializedName("vote_average")
-    @Expose
-    private Double voteAverage;
-    @SerializedName("title")
-    @Expose
-    private String title;
-    @SerializedName("popularity")
-    @Expose
-    private Double popularity;
-    @SerializedName("poster_path")
-    @Expose
-    private String posterPath;
-    @SerializedName("original_language")
-    @Expose
-    private String originalLanguage;
-    @SerializedName("original_title")
-    @Expose
-    private String originalTitle;
-    @SerializedName("genre_ids")
-    @Expose
-    private List<Integer> genreIds = null;
-    @SerializedName("backdrop_path")
-    @Expose
-    private String backdropPath;
-    @SerializedName("adult")
-    @Expose
-    private Boolean adult;
-    @SerializedName("overview")
-    @Expose
-    private String overview;
-    @SerializedName("release_date")
-    @Expose
-    private String releaseDate;
 
-    @PrimaryKey(autoGenerate = true)
-    private int uid;
+//    @SerializedName("vote_average")
+//    @Expose
+//    private Double voteAverage;
 
-    public Film(){
+//    @SerializedName("title")
+//    @Expose
+//    private String title;
+
+//    @SerializedName("popularity")
+//    @Expose
+//    private Double popularity;
+
+//    @SerializedName("poster_path")
+//    @Expose
+//    private String posterPath;
+
+//    @SerializedName("overview")
+//    @Expose
+
+//    private String overview;
+//
+//    @SerializedName("release_date")
+//    @Expose
+//    private String releaseDate;
+
+    public Film() {
 
     }
+
 
     public Film(Integer voteCount, Integer id, Boolean video, Double voteAverage, String title, Double popularity, String posterPath, String originalLanguage, String originalTitle, List<Integer> genreIds, String backdropPath, Boolean adult, String overview, String releaseDate, int uid) {
         this.voteCount = voteCount;
@@ -71,22 +63,9 @@ public class Film {
         this.title = title;
         this.popularity = popularity;
         this.posterPath = posterPath;
-        this.originalLanguage = originalLanguage;
-        this.originalTitle = originalTitle;
-        this.genreIds = genreIds;
-        this.backdropPath = backdropPath;
-        this.adult = adult;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.uid = uid;
-    }
-
-    public Integer getVoteCount() {
-        return voteCount;
-    }
-
-    public void setVoteCount(Integer voteCount) {
-        this.voteCount = voteCount;
     }
 
     public Integer getId() {
@@ -137,46 +116,6 @@ public class Film {
         this.posterPath = posterPath;
     }
 
-    public String getOriginalLanguage() {
-        return originalLanguage;
-    }
-
-    public void setOriginalLanguage(String originalLanguage) {
-        this.originalLanguage = originalLanguage;
-    }
-
-    public String getOriginalTitle() {
-        return originalTitle;
-    }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
-    }
-
-    public List<Integer> getGenreIds() {
-        return genreIds;
-    }
-
-    public void setGenreIds(List<Integer> genreIds) {
-        this.genreIds = genreIds;
-    }
-
-    public String getBackdropPath() {
-        return backdropPath;
-    }
-
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
-    }
-
-    public Boolean getAdult() {
-        return adult;
-    }
-
-    public void setAdult(Boolean adult) {
-        this.adult = adult;
-    }
-
     public String getOverview() {
         return overview;
     }
@@ -201,24 +140,30 @@ public class Film {
         this.uid = uid;
     }
 
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "uid")
+    private int uid;
 
-    //    @ColumnInfo(name = "id")
-//    private int filmId;
-//    @ColumnInfo(name = "film_title")
-//    private String filmTitle;
-//
-//    @ColumnInfo(name = "film_overview")
-//    private String filmOverview;
-//
-//    @ColumnInfo(name = "film_poster_path")
-//    private String filmPosterPath;
-//
-//    @ColumnInfo(name = "film_release_date")
-//    private String filmReleaseDate;
+    @ColumnInfo(name = "movie_db_id")
+    private int id;
 
-//    @ColumnInfo(name = "favourite")
-//    private Boolean filmFavourite;
+    @ColumnInfo(name = "title")
+    private String title;
 
+    @ColumnInfo(name = "overview")
+    private String overview;
 
-    }
+    @ColumnInfo(name = "popularity")
+    private Double popularity;
+
+    @ColumnInfo(name = "vote_average")
+    private Double voteAverage;
+
+    @ColumnInfo(name = "release_date")
+    private String releaseDate;
+
+    @ColumnInfo(name = "poster_path")
+    private String posterPath;
+
+}
 

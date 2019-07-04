@@ -23,16 +23,16 @@ public class FilmRespository {
 
     }
 
-    private void refreshFavFilms( final String filmId ){
-        executor.execute();
-
-        boolean favMovieExists = (filmDao.());
-
-
-
-        ;
-
-    }
+//    private void refreshFavFilms( final String filmId ){
+//        executor.execute();
+//
+//        boolean favMovieExists = (filmDao.());
+//
+//
+//
+//        ;
+//
+//    }
 
 
 
