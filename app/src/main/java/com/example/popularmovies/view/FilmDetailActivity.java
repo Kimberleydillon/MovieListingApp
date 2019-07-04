@@ -1,4 +1,4 @@
-package com.example.popularmovies;
+package com.example.popularmovies.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.popularmovies.BuildConfig;
 import com.example.popularmovies.Data.AppDatabase;
+import com.example.popularmovies.Data.FilmDao;
+import com.example.popularmovies.GlideApp;
+import com.example.popularmovies.R;
+import com.example.popularmovies.model.FilmResults;
+import com.example.popularmovies.service.MovieDBClient;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
@@ -107,7 +113,7 @@ public class FilmDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 final com.example.popularmovies.Data.Film dbTestFilm = makeATestFilm(movieIdInt, title, synopsis, poster, releaseDate, true);
-                Log.d("DBTest Film", dbTestFilm.toString());
+
                 heartOutline.setVisibility(View.GONE);
                 heart.setVisibility(View.VISIBLE);
                 appDb.filmDao().insert(dbTestFilm);
@@ -129,14 +135,14 @@ public class FilmDetailActivity extends AppCompatActivity {
     }
 
 
-    public Film makeATestFilm(int filmId, String filmTitle, String filmOverview, String filmposter, String releaseDate, Boolean Favourite) {
-        Film testFilm = new Film();
+    public com.example.popularmovies.Data.Film makeATestFilm(int filmId, String filmTitle, String filmOverview, String filmposter, String releaseDate, Boolean Favourite) {
+        com.example.popularmovies.Data.Film testFilm = new com.example.popularmovies.Data.Film();
         testFilm.setId(filmId);
         testFilm.setTitle(filmTitle);
         testFilm.setOverview(filmOverview);
         testFilm.setPosterPath(filmposter);
         testFilm.setReleaseDate(releaseDate);
-        testFilm.setFavourite(Favourite);
+//        testFilm.setFavourite(Favourite);
 
         return testFilm;
     }

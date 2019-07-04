@@ -1,4 +1,4 @@
-package com.example.popularmovies;
+package com.example.popularmovies.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.example.popularmovies.BuildConfig;
 import com.example.popularmovies.Data.AppDatabase;
+import com.example.popularmovies.R;
+import com.example.popularmovies.model.FilmResults;
+import com.example.popularmovies.service.MovieDBClient;
 
 
 import java.util.List;
@@ -36,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
     static final String API_KEY = BuildConfig.ApiKey;
     static final String BASE_URL = "https://api.themoviedb.org/3/";
-    static final String Popular = "Popular Movies";
-    static final String HighRated = "Highest User Rating";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +76,17 @@ public class MainActivity extends AppCompatActivity {
                 popularFilmCall("popular");
                 return true;
             case R.id.highest_user_ranking:
-                popularFilmCall("top-rated");
+                popularFilmCall("top_rated");
+                return true;
             case R.id.favourites:
-                String numberOfFavourites = Integer.toString(appDb.filmDao().countFilms());
-                testdb.setText(numberOfFavourites);
+                List<com.example.popularmovies.Data.Film> favourites = (List<com.example.popularmovies.Data.Film>) appDb.filmDao().getAllFilms();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private List<Film> fetchResults(Response<FilmResults> response) {
+    private List<com.example.popularmovies.Data.Film> fetchResults(Response<FilmResults> response) {
         FilmResults topRatedFilms = response.body();
         return topRatedFilms.getResults();
     }
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<FilmResults> call, Response<FilmResults> response) {
                 //show results on screen.
-                List<Film> films = fetchResults(response);
+                List<com.example.popularmovies.Data.Film> films = fetchResults(response);
                 adapter.setMovies(films);
             }
 
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     FilmAdapter.Listener listener = new FilmAdapter.Listener() {
         @Override
-        void onClick(Film movie) {
+        void onClick(com.example.popularmovies.Data.Film movie) {
             Intent filmDetail = new Intent(MainActivity.this, FilmDetailActivity.class);
             filmDetail.putExtra("title", movie.getTitle());
             filmDetail.putExtra("rating", movie.getVoteAverage().toString());

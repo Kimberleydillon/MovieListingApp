@@ -24,8 +24,8 @@ public interface FilmDao {
     @Delete
     void delete(Film film);
 
-    @Query("SELECT * FROM films WHERE favourite = 1")
-    List<Film> getAllFavouriteFilms();
+    @Query("SELECT * FROM films WHERE id = :id LIMIT 1")
+    LiveData<List<Film>> getAllFavouriteFilms();
 
 
 }

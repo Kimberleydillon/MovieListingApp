@@ -1,4 +1,4 @@
-package com.example.popularmovies;
+package com.example.popularmovies.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,13 +9,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.popularmovies.GlideApp;
+import com.example.popularmovies.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.FilmViewHolder> {
 
     private static final String TAG = FilmAdapter.class.getSimpleName();
-    private List<Film> films;
+    private List<com.example.popularmovies.Data.Film> films;
     TextView title;
     ImageView posterView;
     LinearLayout moviesquare;
@@ -29,7 +32,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.FilmViewHolder
     }
 
 
-    public void setMovies(List<Film> filmResults) {
+    public void setMovies(List<com.example.popularmovies.Data.Film> filmResults) {
         this.films = filmResults;
         notifyDataSetChanged();
     }
@@ -45,7 +48,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.FilmViewHolder
             title = itemView.findViewById(R.id.tv_film_title);
         }
 
-        void setItems(final Film film) {
+        void setItems(final com.example.popularmovies.Data.Film film) {
             title.setText(film.getTitle());
 
             GlideApp.with(context)
@@ -86,7 +89,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.FilmViewHolder
 
     @Override
     public void onBindViewHolder(FilmViewHolder holder, final int position) {
-        Film film = films.get(position);
+        com.example.popularmovies.Data.Film film = films.get(position);
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,7 +110,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.FilmViewHolder
 
 
     abstract static class Listener {
-        abstract void onClick(Film movie);
+        abstract void onClick(com.example.popularmovies.Data.Film movie);
     }
 
 

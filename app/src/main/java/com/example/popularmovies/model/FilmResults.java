@@ -1,4 +1,4 @@
-package com.example.popularmovies;
+package com.example.popularmovies.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -18,7 +18,7 @@ public class FilmResults {
     private Integer totalPages;
     @SerializedName("results")
     @Expose
-    private List<Film> results = null;
+    private List<com.example.popularmovies.Data.Film> results = null;
 
     public Integer getPage() {
         return page;
@@ -44,11 +44,11 @@ public class FilmResults {
         this.totalPages = totalPages;
     }
 
-    public List<Film> getResults() {
+    public List<com.example.popularmovies.Data.Film> getResults() {
         return results;
     }
 
-    public void setResults(List<Film> results) {
+    public void setResults(List<com.example.popularmovies.Data.Film> results) {
         this.results = results;
     }
 }

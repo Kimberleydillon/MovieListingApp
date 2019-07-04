@@ -1,5 +1,6 @@
-package com.example.popularmovies;
+package com.example.popularmovies.model;
 
+import com.example.popularmovies.model.Review;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

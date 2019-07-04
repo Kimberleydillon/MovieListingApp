@@ -7,8 +7,10 @@ import android.content.Context;
 
 @Database(entities = {Film.class}, version = 1 )
 public abstract class AppDatabase extends RoomDatabase {
+    // ---DAO---
     public abstract FilmDao filmDao();
 
+   //---Singleton---
     private static volatile AppDatabase INSTANCE;
 
     public static AppDatabase getDatabase (final Context context){
@@ -19,7 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class, "app_database")
                             // Queries should be done in a separate thread to avoid locking the UI
                             // We will allow this ONLY TEMPORALLY to see that our DB is working
-                            .allowMainThreadQueries()
+                            //.allowMainThreadQueries()
                             .build();
                 }
             }
